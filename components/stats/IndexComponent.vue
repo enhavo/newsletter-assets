@@ -16,8 +16,8 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Vue, Options, Inject } from "vue-property-decorator";
+<script setup lang="ts">
+import {inject} from "vue";
 import '@enhavo/app/assets/fonts/enhavo-icons.font'
 import '@enhavo/app/assets/styles/view.scss'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -26,34 +26,28 @@ import * as moment from "moment";
 import StatsApp from "@enhavo/newsletter/stats/StatsApp";
 import Translator from "@enhavo/core/Translator";
 
-@Options({})
-export default class extends Vue
+const statsApp = inject<StatsApp>('statsApp');
+const translator = inject<Translator>('translator');
+
+function trans(value) 
 {
-    @Inject()
-    statsApp: StatsApp;
+    return translator.trans(value);
+}
 
-    @Inject()
-    translator: Translator
-
-    trans(value) {
-        return this.translator.trans(value);
+function sentAt(receiver: Receiver): string
+{
+    if (receiver.sentAt) {
+        return moment(receiver.sentAt).format('DD.MM.YYYY HH:mm')
     }
+    return null
+}
 
-    sentAt(receiver: Receiver): string
-    {
-        if(receiver.sentAt) {
-            return moment(receiver.sentAt).format('DD.MM.YYYY HH:mm')
-        }
-        return null
+function readAt(receiver: Receiver): string
+{
+    let date = receiver.getFirstReadDate();
+    if (date) {
+        return moment(date).format('DD.MM.YYYY HH:mm')
     }
-
-    readAt(receiver: Receiver): string
-    {
-        let date = receiver.getFirstReadDate();
-        if(date) {
-            return moment(date).format('DD.MM.YYYY HH:mm')
-        }
-        return null
-    }
+    return null
 }
 </script>
