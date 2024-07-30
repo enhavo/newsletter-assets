@@ -1,14 +1,13 @@
-import AbstractAction from "@enhavo/app/action/model/AbstractAction";
-import Message from "@enhavo/app/flash-message/Message";
+import {AbstractAction} from "@enhavo/app/action/model/AbstractAction";
+import { FlashMessenger, FlashMessage } from "@enhavo/app/flash-message/FlashMessenger";
 import axios from "axios";
-import FlashMessenger from "@enhavo/app/flash-message/FlashMessenger";
 import Confirm from "@enhavo/app/view/Confirm";
 import Form from "@enhavo/app/form/Form";
 import Translator from "@enhavo/core/Translator";
 import View from "@enhavo/app/view/View";
 import Router from "@enhavo/core/Router";
 
-export default class NewsletterSendAction extends AbstractAction
+export class NewsletterSendAction extends AbstractAction
 {
     private readonly form: Form;
     private readonly translator: Translator;
@@ -61,10 +60,7 @@ export default class NewsletterSendAction extends AbstractAction
             .post(url, {})
             .then((data) => {
                 this.view.loaded();
-                this.flashMessenger.addMessage(new Message(
-                    data.data.type, data.data.message
-                )
-                );
+                this.flashMessenger.add(data.data.message, data.data.type);
             })
             .catch((error) => {
                 this.view.loaded();

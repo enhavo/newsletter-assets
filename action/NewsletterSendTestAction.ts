@@ -1,12 +1,11 @@
-import AbstractAction from "@enhavo/app/action/model/AbstractAction";
+import { AbstractAction } from "@enhavo/app/action/model/AbstractAction";
 import $ from 'jquery';
-import Message from "@enhavo/app/flash-message/Message";
 import AjaxFormModal from "@enhavo/app/modal/model/AjaxFormModal";
-import FlashMessenger from "@enhavo/app/flash-message/FlashMessenger";
+import { FlashMessenger, FlashMessage } from "@enhavo/app/flash-message/FlashMessenger";
 import Translator from "@enhavo/core/Translator";
 import ModalManager from "@enhavo/app/modal/ModalManager";
 
-export default class NewsletterSendTestAction extends AbstractAction
+export class NewsletterSendTestAction extends AbstractAction
 {
     private flashMessenger: FlashMessenger;
     private translator: Translator;
@@ -31,15 +30,15 @@ export default class NewsletterSendTestAction extends AbstractAction
         this.modal.actionHandler = (modal: AjaxFormModal, data: any, error: string) => {
             return new Promise((resolve, reject) => {
                 if(data.status == 400) {
-                    this.flashMessenger.addMessage(new Message(data.data.type, data.data.message));
+                    this.flashMessenger.add(data.data.message, data.data.type);
                     resolve(false);
                     return;
                 } else if(error) {
-                    this.flashMessenger.addMessage(new Message(Message.ERROR, this.translator.trans(error)));
+                    this.flashMessenger.add(this.translator.trans(error));
                     resolve(false);
                     return;
                 }
-                this.flashMessenger.addMessage(new Message(data.data.type, data.data.message));
+                this.flashMessenger.add(data.data.message, data.data.type);
                 resolve(true);
             })
         };
