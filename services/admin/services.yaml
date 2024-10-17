@@ -25,7 +25,7 @@ services:
         import: NewsletterSendTestAction
         arguments:
             - '@enhavo/app/flash-message/FlashMessenger'
-            - '@enhavo/core/Translator'
+            - '@enhavo/app/translation/Translator'
             - '@enhavo/app/modal/ModalManager'
         tags:
             - { name: 'enhavo_app.action' }
